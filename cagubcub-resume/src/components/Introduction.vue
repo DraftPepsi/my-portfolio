@@ -152,7 +152,7 @@ onMounted(() => {
 
     <!-- RIGHT SIDE -->
     <div class="intro-right">
-      <Transition name="projectfade">
+      <Transition name="cardfade">
         <div v-if="showCard && showProjects" class="projects-card">
           <h3 class="projects-title">Projects Handled</h3>
 

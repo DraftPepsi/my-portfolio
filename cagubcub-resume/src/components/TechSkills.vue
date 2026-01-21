@@ -88,7 +88,7 @@ function goTopAndPrev() {
   <section class="skills-page">
     <h2 class="skills-title">Technical Skills</h2>
     <p class="skills-subtitle">
-      An overview of my technical strengths in development and testing.
+      An overview of my technical strengths across development and testing.
     </p>
 
     <div class="skills-grid">

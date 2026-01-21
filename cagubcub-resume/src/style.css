@@ -11,7 +11,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Layout scale */
+  /* Layout */
   --page-max: 1100px;
   --gutter: clamp(16px, 4vw, 40px);
   --gap: clamp(12px, 2.2vw, 24px);
@@ -25,20 +25,33 @@
   --button-bg: #f9f9f9;
   --button-border: transparent;
 
-  /* 🌸 Pink translucent intro card (LIGHT) */
+  /* Intro/Work/Projects surface (pink glass) */
   --intro-card-bg: rgba(236, 72, 153, 0.12);
   --intro-card-border: rgba(236, 72, 153, 0.22);
   --intro-card-shadow: 0 10px 30px rgba(236, 72, 153, 0.12);
+  --intro-card-hover-bg: rgba(236, 72, 153, 0.25);
 
-  /* ✅ Equal height baseline for desktop */
+  /* Other Skills (neutral gray – visible in light) */
+  --other-card-bg: rgba(0, 0, 0, 0.06);
+  --other-card-border: rgba(0, 0, 0, 0.12);
+  --other-card-shadow: 0 10px 26px rgba(0, 0, 0, 0.10);
+  --other-card-hover-bg: rgba(0, 0, 0, 0.10);
+
+  /* Compilation (amber/orange – visible in light) */
+  --comp-card-bg: rgba(245, 158, 11, 0.14);
+  --comp-card-border: rgba(245, 158, 11, 0.26);
+  --comp-card-shadow: 0 10px 28px rgba(245, 158, 11, 0.12);
+  --comp-card-hover-bg: rgba(245, 158, 11, 0.22);
+
+  /* Desktop baseline */
   --intro-section-min-height: 220px;
-  --intro-title-scale: 1; /* default (100%) */
+  --intro-title-scale: 1;
 
-  /* Nav button colors (light theme) */
+  /* Nav buttons */
   --nav-btn-bg: rgba(0, 0, 0, 0.08);
   --nav-btn-border: rgba(0, 0, 0, 0.14);
   --nav-btn-text: rgba(0, 0, 0, 0.75);
-  --nav-btn-hover-bg: rgba(0, 0, 0, 0.12); /* darker on hover in light mode */
+  --nav-btn-hover-bg: rgba(0, 0, 0, 0.12);
 }
 
 .dark {
@@ -49,20 +62,31 @@
   --button-bg: #1a1a1a;
   --button-border: transparent;
 
-  /* 🌸 Pink translucent intro card (DARK) */
   --intro-card-bg: rgba(236, 72, 153, 0.18);
   --intro-card-border: rgba(236, 72, 153, 0.28);
   --intro-card-shadow: 0 12px 34px rgba(0, 0, 0, 0.35);
+  --intro-card-hover-bg: rgba(236, 72, 153, 0.30);
 
-  /* Nav button colors (dark theme) */
+  /* Other Skills (neutral gray – visible in dark) */
+  --other-card-bg: rgba(255, 255, 255, 0.08);
+  --other-card-border: rgba(255, 255, 255, 0.14);
+  --other-card-shadow: 0 12px 34px rgba(0, 0, 0, 0.38);
+  --other-card-hover-bg: rgba(255, 255, 255, 0.14);
+
+  /* Compilation (amber/orange – visible in dark) */
+  --comp-card-bg: rgba(245, 158, 11, 0.13);
+  --comp-card-border: rgba(245, 158, 11, 0.22);
+  --comp-card-shadow: 0 12px 34px rgba(0, 0, 0, 0.38);
+  --comp-card-hover-bg: rgba(245, 158, 11, 0.18);
+
   --nav-btn-bg: rgba(255, 255, 255, 0.10);
   --nav-btn-border: rgba(255, 255, 255, 0.16);
   --nav-btn-text: rgba(255, 255, 255, 0.82);
-  --nav-btn-hover-bg: rgba(255, 255, 255, 0.16); /* lighter on hover in dark mode */
+  --nav-btn-hover-bg: rgba(255, 255, 255, 0.16);
 }
 
 /* ============================== */
-/*   GLOBAL RESETS                */
+/*   RESETS + GLOBAL              */
 /* ============================== */
 
 *,
@@ -85,16 +109,7 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-/* Smooth theme transitions — applied only where it matters */
-body,
-a,
-button,
-.intro-card,
-.work-card,
-.projects-card,
-.slider,
-.slider::before,
-.skills-card {
+:where(body, a, button, .intro-card, .work-card, .projects-card, .slider, .slider::before, .skills-card, .nav-btn) {
   transition:
     background-color 0.35s ease,
     color 0.35s ease,
@@ -102,10 +117,6 @@ button,
     box-shadow 0.35s ease,
     transform 0.35s ease;
 }
-
-/* ============================== */
-/*   GLOBAL ELEMENTS              */
-/* ============================== */
 
 a {
   font-weight: 500;
@@ -120,6 +131,23 @@ h1 {
   font-size: clamp(2rem, 6vw, 3.2rem);
   line-height: 1.1;
   margin: 0;
+}
+/* Reset default heading margins (fixes card title misalignment) */
+h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+/* Make Intro/Work/Projects card titles consistent */
+.intro-card h2,
+.intro-card h3,
+.work-card h2,
+.work-card h3,
+.projects-card h2,
+.projects-card h3 {
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+  font-size: 1.25em;
+  line-height: 1.2;
 }
 
 button {
@@ -139,10 +167,11 @@ button {
 
 #app {
   width: 100%;
-  padding: calc(var(--gutter) + env(safe-area-inset-top))
-           calc(var(--gutter) + env(safe-area-inset-right))
-           calc(var(--gutter) + env(safe-area-inset-bottom))
-           calc(var(--gutter) + env(safe-area-inset-left));
+  padding:
+    calc(var(--gutter) + env(safe-area-inset-top))
+    calc(var(--gutter) + env(safe-area-inset-right))
+    calc(var(--gutter) + env(safe-area-inset-bottom))
+    calc(var(--gutter) + env(safe-area-inset-left));
 }
 
 .page {
@@ -151,7 +180,7 @@ button {
 }
 
 /* ============================== */
-/*   GLOBAL THEME SWITCH          */
+/*   THEME SWITCH (TOP RIGHT)     */
 /* ============================== */
 
 .global-theme-switch {
@@ -216,27 +245,23 @@ input:checked + .slider::before {
 }
 
 /* ============================== */
-/*   INTRO LAYOUT (MOBILE FIRST)  */
+/*   INTRO PAGE LAYOUT            */
 /* ============================== */
 
 .intro-layout {
   width: 100%;
   margin: 0;
-  padding-left: clamp(1rem, 4vw, 2.5rem);
-  padding-right: clamp(1rem, 4vw, 2.5rem);
-  padding-top: 1.5rem;
-
+  padding: 1.5rem clamp(1rem, 4vw, 2.5rem) 0;
   display: grid;
-  grid-template-columns: 1fr; /* mobile */
+  grid-template-columns: 1fr;
   row-gap: 1.5rem;
   align-items: start;
 }
 
-/* ✅ DESKTOP: header + 2 equal rows (perfect alignment) */
 @media (min-width: 769px) {
   .intro-layout {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: auto 1fr 1fr; /* header + 2 equal rows */
+    grid-template-rows: auto 1fr 1fr;
     gap: 1.5rem;
     align-items: stretch;
   }
@@ -274,26 +299,22 @@ input:checked + .slider::before {
     height: 100%;
     min-height: 0;
     flex: 1;
-    overflow: auto; /* ✅ projects scroll if too long */
+    overflow: auto;
   }
 }
 
-/* Mobile: keep natural flow + spacing */
 @media (max-width: 768px) {
   .intro-left {
     text-align: left;
   }
-
   .intro-left > * + * {
     margin-top: 1.5rem;
   }
-
   .intro-right {
     min-height: 1px;
   }
 }
 
-/* Header spans both columns */
 .intro-role {
   grid-column: 1 / -1;
   margin: 0 0 0.5rem 0;
@@ -308,7 +329,7 @@ input:checked + .slider::before {
 }
 
 /* ============================== */
-/*   CARDS                        */
+/*   INTRO/WORK/PROJECTS CARDS    */
 /* ============================== */
 
 .intro-card,
@@ -317,16 +338,20 @@ input:checked + .slider::before {
   border-radius: var(--radius);
   padding: clamp(14px, 2.2vw, 20px);
   line-height: 1.7;
-
   background: var(--intro-card-bg);
   border: 1px solid var(--intro-card-border);
   box-shadow: var(--intro-card-shadow);
-
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
 
-/* Desktop baseline minimum height */
+.intro-card:hover,
+.work-card:hover,
+.projects-card:hover {
+  background: var(--intro-card-hover-bg);
+  transform: translateY(-2px);
+}
+
 @media (min-width: 769px) {
   .intro-card,
   .work-card,
@@ -368,7 +393,6 @@ input:checked + .slider::before {
   white-space: nowrap;
 }
 
-/* Intro paragraph readability */
 .intro-card p,
 .work-card p,
 .projects-card p {
@@ -429,16 +453,8 @@ input:checked + .slider::before {
   z-index: 10;
 }
 
-.intro-title {
-  margin: 0 0 1rem 0;
-  font-weight: 700;
-  font-size: 1.25em;
-  text-align: left;
-}
-
-
 /* ============================== */
-/*   TRANSITIONS (VUE)            */
+/*   VUE TRANSITIONS              */
 /* ============================== */
 
 .fade-enter-active,
@@ -450,85 +466,32 @@ input:checked + .slider::before {
   opacity: 0;
 }
 
-.textfade-enter-active {
-  transition: opacity 0.35s ease, transform 0.35s ease;
+.fade-leave-active {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
 }
-.textfade-enter-from {
-  opacity: 0;
-  transform: translateY(6px);
+.pagefade-enter-active {
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
-
-.cardfade-enter-active {
-  transition: opacity 0.45s ease, transform 0.45s ease;
+.pagefade-leave-active {
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
 }
-.cardfade-enter-from {
+.pagefade-enter-from {
   opacity: 0;
   transform: translateY(10px);
 }
-
-.projectfade-enter-active,
-.projectfade-leave-active {
-  transition: opacity 0.45s ease, transform 0.45s ease;
-}
-.projectfade-enter-from,
-.projectfade-leave-to {
+.pagefade-leave-to {
   opacity: 0;
-  transform: translateX(12px);
+  transform: translateY(-6px);
 }
 
 /* ============================== */
-/*   TYPING CARET (RESPONSIVE)    */
-/* ============================== */
-
-.typing-text {
-  white-space: normal;
-  overflow-wrap: anywhere;
-}
-
-.caret {
-  display: inline-block;
-  margin-left: 2px;
-  animation: blink 0.9s step-end infinite;
-}
-
-@keyframes blink {
-  0%,
-  100% { opacity: 0; }
-  50% { opacity: 1; }
-}
-
-/* ============================== */
-/*   ACCESSIBILITY + MOBILE       */
-/* ============================== */
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-  .caret {
-    animation: none;
-  }
-}
-
-@media (max-width: 600px) {
-  .work-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.15rem;
-  }
-
-  .work-date {
-    white-space: normal;
-  }
-
-  .caret {
-    display: none;
-  }
-}
-
-/* ============================== */
-/*   NAV BUTTONS (BOTTOM)         */
+/*   NAV BUTTONS                  */
 /* ============================== */
 
 .nav-row {
@@ -547,10 +510,8 @@ input:checked + .slider::before {
   padding: 0.65rem 1.1rem;
   font-weight: 600;
   cursor: pointer;
-
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-
   transition:
     background-color 0.25s ease,
     border-color 0.25s ease,
@@ -572,19 +533,12 @@ input:checked + .slider::before {
 }
 
 .nav-btn.is-hidden {
-  visibility: hidden; /* keeps center alignment */
+  visibility: hidden;
   pointer-events: none;
 }
 
-@media (max-width: 480px) {
-  .nav-btn {
-    padding: 0.55rem 0.95rem;
-    font-size: 0.95rem;
-  }
-}
-
 /* ============================== */
-/*   TECH SKILLS PAGE             */
+/*   SKILLS PAGES                 */
 /* ============================== */
 
 .skills-page {
@@ -618,9 +572,24 @@ input:checked + .slider::before {
   }
 }
 
+/* Base skills card */
 .skills-card {
   border-radius: var(--radius);
   padding: clamp(14px, 2.2vw, 20px);
+
+  /* Defaults */
+  --skills-accent: #888;
+  --skills-bg: rgba(0, 0, 0, 0.04);
+  --skills-border: rgba(0, 0, 0, 0.08);
+  --skills-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --skills-track: rgba(0, 0, 0, 0.06);
+  --skills-track-border: rgba(0, 0, 0, 0.08);
+
+  /* Strong hover like intro cards */
+  --skills-hover-bg: rgba(0, 0, 0, 0.08);
+  --skills-hover-border: rgba(0, 0, 0, 0.16);
+  --skills-hover-shadow: 0 14px 36px rgba(0, 0, 0, 0.14);
+
   border: 1px solid var(--skills-border);
   background: var(--skills-bg);
   box-shadow: var(--skills-shadow);
@@ -636,10 +605,12 @@ input:checked + .slider::before {
 }
 
 .skills-card:hover {
+  background: var(--skills-hover-bg);
+  border-color: var(--skills-hover-border);
+  box-shadow: var(--skills-hover-shadow);
   transform: translateY(-2px);
 }
 
-/* ✅ Title: less bold + ~10% bigger */
 .skills-card-title {
   margin: 0 0 0.9rem 0;
   font-weight: 650;
@@ -689,22 +660,17 @@ input:checked + .slider::before {
   transition: width 0.6s ease;
 }
 
-/* Theme defaults */
-.skills-card {
-  --skills-accent: #888;
-  --skills-bg: rgba(0, 0, 0, 0.04);
-  --skills-border: rgba(0, 0, 0, 0.08);
-  --skills-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  --skills-track: rgba(0, 0, 0, 0.06);
-  --skills-track-border: rgba(0, 0, 0, 0.08);
-}
-
-/* --- Core themes --- */
+/* Skill palettes + stronger hover per theme */
 .skills-card[data-skill-theme="frontend"] {
   --skills-accent: #007bff;
   --skills-bg: rgba(0, 123, 255, 0.10);
   --skills-border: rgba(0, 123, 255, 0.20);
   --skills-shadow: 0 10px 30px rgba(0, 123, 255, 0.12);
+
+  --skills-hover-bg: rgba(0, 123, 255, 0.18);
+  --skills-hover-border: rgba(0, 123, 255, 0.34);
+  --skills-hover-shadow: 0 14px 38px rgba(0, 123, 255, 0.18);
+
   --skills-track: rgba(0, 123, 255, 0.10);
   --skills-track-border: rgba(0, 123, 255, 0.18);
 }
@@ -714,6 +680,11 @@ input:checked + .slider::before {
   --skills-bg: rgba(40, 167, 69, 0.10);
   --skills-border: rgba(40, 167, 69, 0.22);
   --skills-shadow: 0 10px 30px rgba(40, 167, 69, 0.12);
+
+  --skills-hover-bg: rgba(40, 167, 69, 0.18);
+  --skills-hover-border: rgba(40, 167, 69, 0.36);
+  --skills-hover-shadow: 0 14px 38px rgba(40, 167, 69, 0.18);
+
   --skills-track: rgba(40, 167, 69, 0.10);
   --skills-track-border: rgba(40, 167, 69, 0.18);
 }
@@ -723,309 +694,278 @@ input:checked + .slider::before {
   --skills-bg: rgba(220, 53, 69, 0.10);
   --skills-border: rgba(220, 53, 69, 0.22);
   --skills-shadow: 0 10px 30px rgba(220, 53, 69, 0.12);
+
+  --skills-hover-bg: rgba(220, 53, 69, 0.18);
+  --skills-hover-border: rgba(220, 53, 69, 0.36);
+  --skills-hover-shadow: 0 14px 38px rgba(220, 53, 69, 0.18);
+
   --skills-track: rgba(220, 53, 69, 0.10);
   --skills-track-border: rgba(220, 53, 69, 0.18);
 }
 
-/* --- New themes (Tools/Version/ERP) --- */
-/* Tools Used - Purple */
 .skills-card[data-skill-theme="tools"] {
   --skills-accent: #a855f7;
   --skills-bg: rgba(168, 85, 247, 0.10);
   --skills-border: rgba(168, 85, 247, 0.20);
   --skills-shadow: 0 10px 30px rgba(168, 85, 247, 0.12);
+
+  --skills-hover-bg: rgba(168, 85, 247, 0.18);
+  --skills-hover-border: rgba(168, 85, 247, 0.36);
+  --skills-hover-shadow: 0 14px 38px rgba(168, 85, 247, 0.18);
+
   --skills-track: rgba(168, 85, 247, 0.10);
   --skills-track-border: rgba(168, 85, 247, 0.18);
 }
 
-/* Version Control - Brown */
 .skills-card[data-skill-theme="version"] {
   --skills-accent: #8b5e34;
   --skills-bg: rgba(139, 94, 52, 0.10);
   --skills-border: rgba(139, 94, 52, 0.22);
   --skills-shadow: 0 10px 30px rgba(139, 94, 52, 0.12);
+
+  --skills-hover-bg: rgba(139, 94, 52, 0.18);
+  --skills-hover-border: rgba(139, 94, 52, 0.36);
+  --skills-hover-shadow: 0 14px 38px rgba(139, 94, 52, 0.18);
+
   --skills-track: rgba(139, 94, 52, 0.10);
   --skills-track-border: rgba(139, 94, 52, 0.18);
 }
 
-/* ERP/Enterprise - Yellow */
 .skills-card[data-skill-theme="erp"] {
   --skills-accent: #f59e0b;
   --skills-bg: rgba(245, 158, 11, 0.10);
   --skills-border: rgba(245, 158, 11, 0.22);
   --skills-shadow: 0 10px 30px rgba(245, 158, 11, 0.12);
+
+  --skills-hover-bg: rgba(245, 158, 11, 0.18);
+  --skills-hover-border: rgba(245, 158, 11, 0.36);
+  --skills-hover-shadow: 0 14px 38px rgba(245, 158, 11, 0.18);
+
   --skills-track: rgba(245, 158, 11, 0.10);
   --skills-track-border: rgba(245, 158, 11, 0.18);
 }
 
-/* Dark mode tweaks (same hues, slightly stronger tint) */
-.dark .skills-card[data-skill-theme="frontend"] {
-  --skills-bg: rgba(0, 123, 255, 0.16);
-  --skills-border: rgba(0, 123, 255, 0.28);
-  --skills-shadow: 0 12px 34px rgba(0, 0, 0, 0.35);
-  --skills-track: rgba(0, 123, 255, 0.14);
-  --skills-track-border: rgba(0, 123, 255, 0.24);
-}
-
-.dark .skills-card[data-skill-theme="backend"] {
-  --skills-bg: rgba(40, 167, 69, 0.16);
-  --skills-border: rgba(40, 167, 69, 0.28);
-  --skills-shadow: 0 12px 34px rgba(0, 0, 0, 0.35);
-  --skills-track: rgba(40, 167, 69, 0.14);
-  --skills-track-border: rgba(40, 167, 69, 0.24);
-}
-
-.dark .skills-card[data-skill-theme="testing"] {
-  --skills-bg: rgba(220, 53, 69, 0.16);
-  --skills-border: rgba(220, 53, 69, 0.28);
-  --skills-shadow: 0 12px 34px rgba(0, 0, 0, 0.35);
-  --skills-track: rgba(220, 53, 69, 0.14);
-  --skills-track-border: rgba(220, 53, 69, 0.24);
-}
-
-.dark .skills-card[data-skill-theme="tools"] {
-  --skills-bg: rgba(168, 85, 247, 0.18);
-  --skills-border: rgba(168, 85, 247, 0.30);
-  --skills-shadow: 0 12px 34px rgba(0, 0, 0, 0.35);
-  --skills-track: rgba(168, 85, 247, 0.16);
-  --skills-track-border: rgba(168, 85, 247, 0.26);
-}
-
-.dark .skills-card[data-skill-theme="version"] {
-  --skills-bg: rgba(139, 94, 52, 0.18);
-  --skills-border: rgba(139, 94, 52, 0.30);
-  --skills-shadow: 0 12px 34px rgba(0, 0, 0, 0.35);
-  --skills-track: rgba(139, 94, 52, 0.16);
-  --skills-track-border: rgba(139, 94, 52, 0.26);
-}
-
-.dark .skills-card[data-skill-theme="erp"] {
-  --skills-bg: rgba(245, 158, 11, 0.18);
-  --skills-border: rgba(245, 158, 11, 0.30);
-  --skills-shadow: 0 12px 34px rgba(0, 0, 0, 0.35);
-  --skills-track: rgba(245, 158, 11, 0.16);
-  --skills-track-border: rgba(245, 158, 11, 0.26);
-}
-
-/* ✅ HOVER: Light mode gets darker */
-.skills-card[data-skill-theme="frontend"]:hover {
-  --skills-bg: rgba(0, 123, 255, 0.16);
-  --skills-border: rgba(0, 123, 255, 0.32);
-}
-
-.skills-card[data-skill-theme="backend"]:hover {
-  --skills-bg: rgba(40, 167, 69, 0.16);
-  --skills-border: rgba(40, 167, 69, 0.32);
-}
-
-.skills-card[data-skill-theme="testing"]:hover {
-  --skills-bg: rgba(220, 53, 69, 0.16);
-  --skills-border: rgba(220, 53, 69, 0.32);
-}
-
-.skills-card[data-skill-theme="tools"]:hover {
-  --skills-bg: rgba(168, 85, 247, 0.16);
-  --skills-border: rgba(168, 85, 247, 0.32);
-}
-
-.skills-card[data-skill-theme="version"]:hover {
-  --skills-bg: rgba(139, 94, 52, 0.16);
-  --skills-border: rgba(139, 94, 52, 0.32);
-}
-
-.skills-card[data-skill-theme="erp"]:hover {
-  --skills-bg: rgba(245, 158, 11, 0.16);
-  --skills-border: rgba(245, 158, 11, 0.32);
-}
-
-/* ✅ HOVER: Dark mode gets lighter */
-.dark .skills-card[data-skill-theme="frontend"]:hover {
-  --skills-bg: rgba(0, 123, 255, 0.30);
-  --skills-border: rgba(0, 123, 255, 0.48);
-}
-
-.dark .skills-card[data-skill-theme="backend"]:hover {
-  --skills-bg: rgba(40, 167, 69, 0.30);
-  --skills-border: rgba(40, 167, 69, 0.48);
-}
-
-.dark .skills-card[data-skill-theme="testing"]:hover {
-  --skills-bg: rgba(220, 53, 69, 0.30);
-  --skills-border: rgba(220, 53, 69, 0.48);
-}
-
-.dark .skills-card[data-skill-theme="tools"]:hover {
-  --skills-bg: rgba(168, 85, 247, 0.32);
-  --skills-border: rgba(168, 85, 247, 0.48);
-}
-
-.dark .skills-card[data-skill-theme="version"]:hover {
-  --skills-bg: rgba(139, 94, 52, 0.32);
-  --skills-border: rgba(139, 94, 52, 0.48);
-}
-
-.dark .skills-card[data-skill-theme="erp"]:hover {
-  --skills-bg: rgba(245, 158, 11, 0.32);
-  --skills-border: rgba(245, 158, 11, 0.48);
-}
-
 /* ============================== */
-/*   TECH SKILLS SMOOTH FADE      */
+/*   OTHER SKILLS – INDIGO GLASS  */
+/*   (match intro glass opacity)  */
 /* ============================== */
 
-.skillsfade-enter-active {
-  transition:
-    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.skillsfade-leave-active {
-  transition:
-    opacity 0.35s ease,
-    transform 0.35s ease;
-}
-
-.skillsfade-enter-from {
-  opacity: 0;
-  transform: translateY(12px);
-}
-
-.skillsfade-leave-to {
-  opacity: 0;
-  transform: translateY(-6px);
-}
-
-/* ============================== */
-/*   PAGE TRANSITION (SMOOTHER)   */
-/* ============================== */
-
-.pagefade-enter-active {
-  transition:
-    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.pagefade-leave-active {
-  transition:
-    opacity 0.25s ease,
-    transform 0.25s ease;
-}
-
-.pagefade-enter-from {
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-.pagefade-leave-to {
-  opacity: 0;
-  transform: translateY(-6px);
-}
-.intro-card h3 {
-  text-align: left;
-}
-.bullet-list {
-  margin: 0;
-  padding-left: 1.2rem;
-  list-style: disc;
-}
-
-.bullet-list li {
-  margin-bottom: 0.75rem;
-  line-height: 1.6;
-}
-
-/* ============================== */
-/*   OTHER SKILLS – PINK SURFACE  */
-/* ============================== */
-
-/* Base (light mode) */
 .skills-card.other-skills-card {
-  background: rgba(236, 72, 153, 0.10);
-  border: 1px solid rgba(236, 72, 153, 0.22);
-  box-shadow: 0 10px 30px rgba(236, 72, 153, 0.14);
+  /* Same opacity strength as intro-card-bg, but indigo tint */
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.22);
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.12);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-/* Light mode hover → slightly stronger pink */
 .skills-card.other-skills-card:hover {
-  background: rgba(236, 72, 153, 0.16);
-  border-color: rgba(236, 72, 153, 0.34);
+  background: rgba(99, 102, 241, 0.25);
+  border-color: rgba(99, 102, 241, 0.34);
   transform: translateY(-2px);
 }
 
-/* Dark mode → richer but readable */
 .dark .skills-card.other-skills-card {
-  background: rgba(236, 72, 153, 0.18);
-  border-color: rgba(236, 72, 153, 0.30);
-  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.38);
+  /* Same “strength” as dark intro card */
+  background: rgba(99, 102, 241, 0.18);
+  border-color: rgba(99, 102, 241, 0.28);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.35);
 }
 
-/* Dark mode hover → brighter surface */
 .dark .skills-card.other-skills-card:hover {
-  background: rgba(236, 72, 153, 0.30);
-  border-color: rgba(236, 72, 153, 0.46);
+  background: rgba(99, 102, 241, 0.30);
+  border-color: rgba(99, 102, 241, 0.36);
 }
+
+/* ============================== */
+/*   COMPILATION = ORANGE CARDS   */
+/* ============================== */
+
+.compilation-page .skills-card {
+  background: var(--comp-card-bg);
+  border: 1px solid var(--comp-card-border);
+  box-shadow: var(--comp-card-shadow);
+  border-radius: 18px;
+}
+
+.compilation-page .skills-card:hover {
+  background: var(--comp-card-hover-bg);
+  border-color: color-mix(in srgb, var(--comp-card-border), white 8%);
+  transform: translateY(-2px);
+}
+
+/* ============================== */
+/*   BULLET LIST (USED IN CARDS)  */
+/* ============================== */
 
 .bullet-list {
   margin: 0;
   padding-left: 1.25rem;
   line-height: 1.7;
+  list-style: disc;
 }
 
 .bullet-list li + li {
   margin-top: 0.75rem;
 }
-/* ============================= */
-/* COMPILATION – AMBER OVERRIDES */
-/* ============================= */
 
-.compilation-page .skills-card {
-  background: rgba(245, 158, 11, 0.12);   /* amber soft */
-  border: 1px solid rgba(245, 158, 11, 0.28);
-  border-radius: 18px;
-}
+/* ============================== */
+/*   ACCESSIBILITY + MOBILE       */
+/* ============================== */
 
-/* Accent title */
-.compilation-page .skills-card-title {
-  color: #f59e0b;
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-/* Bullet list spacing */
-.compilation-page .bullet-list li {
-  margin-bottom: 10px;
+@media (max-width: 600px) {
+  .work-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+  }
+
+  .work-date {
+    white-space: normal;
+  }
 }
 
-/* Hover (subtle, professional) */
-.compilation-page .skills-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.10);
+.textfade-enter-active,
+.textfade-leave-active {
+  transition: opacity 0.45s ease, transform 0.45s ease;
 }
 
-/* Nav buttons (optional but matches amber) */
-.compilation-page .nav-btn {
-  border-color: rgba(245, 158, 11, 0.35);
-  color: #92400e;
+.textfade-enter-from,
+.textfade-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
 }
 
-.compilation-page .nav-btn:hover {
-  background: rgba(245, 158, 11, 0.18);
+.cardfade-enter-active,
+.cardfade-leave-active {
+  transition: opacity 0.50s ease, transform 0.50s ease;
 }
 
-.intro-card,
-.work-card,
-.projects-card {
-  background-color: rgba(236, 72, 153, 0.14); /* base pink */
-  transition: background-color 0.25s ease, transform 0.2s ease;
-}
-:root .intro-card:hover,
-:root .work-card:hover,
-:root .projects-card:hover {
-  background-color: rgba(236, 72, 153, 0.25); /* darker pink */
-  transform: translateY(-1px);
-}
-[data-theme="dark"] .intro-card:hover,
-[data-theme="dark"] .work-card:hover,
-[data-theme="dark"] .projects-card:hover {
-  background-color: rgba(236, 72, 153, 0.05); /* lighter pink */
-  transform: translateY(-1px);
+.cardfade-enter-from,
+.cardfade-leave-to {
+  opacity: 0;
+  transform: translateY(14px);
 }
 
+/* ============================== */
+/*   PROJECTS SECTION             */
+/* ============================== */
+
+.projects-section {
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+
+.projects-grid {
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ============================== */
+/*   PROJECT CARDS (COLLAPSIBLE)  */
+/* ============================== */
+
+.project-card {
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+  align-self: start;
+}
+
+/* ---------- TITLE (smooth slide) ---------- */
+/* IMPORTANT: we animate transform ONLY */
+.project-title {
+  margin-bottom: 0.4rem;
+  text-align: center;
+
+  transform: translateX(0);
+  transition: transform 0.5s ease;
+}
+
+/* Expanded → slide left */
+.project-card.expanded .project-title {
+  transform: translateX(-8px);
+  text-align: left; /* visual alignment only, not animated */
+}
+
+/* ---------- ROLL-DOWN PANEL ---------- */
+/* Accordion timing: SAME speed down & up */
+.project-accordion-enter-active,
+.project-accordion-leave-active {
+  transition:
+    height 1s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.6s ease,
+    transform 0.6s ease;
+  overflow: hidden;
+}
+
+/* Title slide duration (0.5s like you asked) */
+.project-title {
+  transition: transform 0.5s ease;
+}
+
+/* ---------- CONTENT ---------- */
+.project-content {
+  margin-top: 0.75rem;
+}
+
+.project-client {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+.project-role {
+  margin: 0.15rem 0 0.75rem;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.project-bullets {
+  margin: 0;
+  padding-left: 1.1rem;
+  list-style: disc;
+}
+
+.project-bullets li {
+  margin-bottom: 0.6rem;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+.project-tech {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+/* ---------- HINT ---------- */
+.project-hint {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0.7;
+  text-align: center;
+  transition: opacity 0.25s ease;
+}
+
+.project-card.expanded .project-hint {
+  opacity: 0.85;
+}
+
+.project-card:hover .project-hint {
+  opacity: 0.9;
+}

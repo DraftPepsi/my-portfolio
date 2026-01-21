@@ -22,10 +22,10 @@ function handleRestart() {
 
 <template>
   <!-- ✅ Only change: add compilation-page -->
-  <section class="skills-page compilation-page">
+  <section class="compilation-section">
     <h2 class="skills-title">Compilation</h2>
     <p class="skills-subtitle">
-      A consolidated summary of my skills, experience, and strengths.
+      A combined summary of my experience, skills, and strengths.
     </p>
 
     <div class="skills-grid">

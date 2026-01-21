@@ -4,25 +4,26 @@
     <ThemeSwitch />
   </div>
 
-  <!-- Intro screen (first load only) -->
-  <Transition name="fade" mode="out-in">
+<!-- Intro screen (first load only) -->
+<Transition name="fade" mode="out-in">
+  <div :key="showIntro ? 'intro' : 'main'">
     <IntroScreen
       v-if="showIntro"
-      key="intro"
       @enter="showIntro = false"
     />
 
     <!-- Main content (pages) -->
-    <main v-else key="main">
+    <main v-else>
       <div class="page">
-        <!-- ✅ Transition animates ONE wrapper div -->
         <Transition name="pagefade" mode="out-in">
           <div :key="currentPage">
             <Introduction
               v-if="currentPage === 1"
+              :key="'intro-page-' + hasVisitedIntro"
               :skipTyping="hasVisitedIntro"
               @next="goNextFromIntro"
             />
+
 
             <TechSkills
               v-else-if="currentPage === 2"
@@ -37,16 +38,18 @@
               :onNext="nextPage"
             />
 
-            <Compilation
+            <CompilationPage
               v-else-if="currentPage === 4"
               :onPrev="prevPage"
               :onRestart="restartToIntro"
-            />
+              />
+
           </div>
         </Transition>
       </div>
     </main>
-  </Transition>
+  </div>
+</Transition>
 </template>
 
 <script setup>
@@ -58,6 +61,8 @@ import Introduction from './components/Introduction.vue'
 import TechSkills from './components/TechSkills.vue'
 import OtherSkills from './components/OtherSkills.vue'
 import Compilation from './components/Compilation.vue'
+import CompilationPage from './components/CompilationPage.vue'
+
 
 const showIntro = ref(true)
 const currentPage = ref(1)

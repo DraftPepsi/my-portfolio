@@ -35,13 +35,13 @@ function handleNext() {
     <h2 class="skills-title">Other Skills</h2>
 
     <p class="skills-subtitle">
-      Additional competencies supporting development, testing, and documentation.
+      Additional competencies that support development, testing, and documentation.
     </p>
 
     <!-- Content -->
     <div class="skills-grid">
       <!-- ✅ Make single card full width -->
-      <div class="skills-card skills-card--full">
+      <div class="skills-card skills-card--full other-skills-card">
         <ul class="bullet-list">
           <li v-for="skill in otherSkills" :key="skill">
             {{ skill }}
