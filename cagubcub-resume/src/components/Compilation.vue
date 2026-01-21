@@ -1,27 +1,8 @@
 <script setup>
-const props = defineProps({
-  onPrev: { type: Function, required: true },
-  // optional: if you want a "restart" to page 1 or intro
-  onRestart: { type: Function, required: false },
-})
-
-function scrollTop() {
-  window.scrollTo({ top: 0, behavior: "smooth" })
-}
-
-function handlePrev() {
-  scrollTop()
-  props.onPrev()
-}
-
-function handleRestart() {
-  scrollTop()
-  if (props.onRestart) props.onRestart()
-}
+/* No navigation logic here */
 </script>
 
 <template>
-  <!-- ✅ Only change: add compilation-page -->
   <section class="compilation-section">
     <h2 class="skills-title">Compilation</h2>
     <p class="skills-subtitle">
@@ -56,16 +37,5 @@ function handleRestart() {
         </ul>
       </div>
     </div>
-
-    <div class="nav-row">
-      <button class="nav-btn" type="button" @click="handlePrev">
-        ← Prev
-      </button>
-
-      <button class="nav-btn" type="button" @click="handleRestart">
-        Back to Top ↑
-      </button>
-    </div>
   </section>
 </template>
-

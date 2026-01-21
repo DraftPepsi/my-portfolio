@@ -1,19 +1,13 @@
 <script setup>
-const props = defineProps({
-  onPrev: { type: Function, required: true },
-  onNext: { type: Function, required: true },
-  showPrev: { type: Boolean, default: true },
-})
-
 const skillGroups = [
   {
     title: 'Front-end',
     theme: 'frontend',
     skills: [
-      { name: 'HTML', percent: 85 },
-      { name: 'CSS', percent: 80 },
-      { name: 'JavaScript', percent: 70 },
-      { name: 'ReactJS', percent: 65 },
+      { name: 'Vue.JS', percent: 85 },
+      { name: 'HTML', percent: 80 },
+      { name: 'CSS', percent: 70 },
+      { name: 'ReactJS', percent: 70 },
     ],
   },
   {
@@ -21,7 +15,7 @@ const skillGroups = [
     theme: 'backend',
     skills: [
       { name: 'Python', percent: 85 },
-      { name: 'SQL / PL-SQL', percent: 75 },      
+      { name: 'SQL / PL-SQL', percent: 75 },
       { name: 'Java', percent: 60 },
       { name: 'C / C++', percent: 55 },
     ],
@@ -31,32 +25,32 @@ const skillGroups = [
     theme: 'testing',
     skills: [
       { name: 'Manual Testing', percent: 85 },
-      { name: 'Selenium', percent: 70 },
-      { name: 'Robot Framework', percent: 65 },
-      { name: 'Ranorex', percent: 60 },
+      { name: 'Selenium', percent: 85 },
+      { name: 'Robot Framework', percent: 85 },
+      { name: 'Ranorex', percent: 80 },
     ],
   },
   {
     title: 'Tools Used',
-    theme: 'tools', // Purple
+    theme: 'tools',
     skills: [
       { name: 'VS Code', percent: 90 },
-      { name: 'Bubble.io', percent: 75 },
-      { name: 'Arduino', percent: 60 },
+      { name: 'Bubble.io', percent: 85 },
+      { name: 'Arduino', percent: 75 },
     ],
   },
   {
     title: 'Version Control',
-    theme: 'version', // Brown
+    theme: 'version',
     skills: [
-      { name: 'Git', percent: 80 },
-      { name: 'GitLab', percent: 70 },
-      { name: 'SVN', percent: 60 },
+      { name: 'Git', percent: 90 },
+      { name: 'GitLab', percent: 90 },
+      { name: 'SVN', percent: 90 },
     ],
   },
   {
     title: 'ERP / Enterprise',
-    theme: 'erp', // Yellow
+    theme: 'erp',
     skills: [
       { name: 'Frappe / ERPNext', percent: 85 },
       { name: 'VirtualBox', percent: 85 },
@@ -70,17 +64,6 @@ function clampPercent(n) {
   const v = Number(n)
   if (!Number.isFinite(v)) return 0
   return Math.max(0, Math.min(100, v))
-}
-
-/* ✅ Scroll helpers */
-function goTopAndNext() {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-  props.onNext()
-}
-
-function goTopAndPrev() {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-  props.onPrev()
 }
 </script>
 
@@ -103,16 +86,10 @@ function goTopAndPrev() {
         </h3>
 
         <ul class="skills-list">
-          <li
-            v-for="s in group.skills"
-            :key="s.name"
-            class="skill-row"
-          >
+          <li v-for="s in group.skills" :key="s.name" class="skill-row">
             <div class="skill-head">
               <span class="skill-name">{{ s.name }}</span>
-              <span class="skill-percent">
-                {{ clampPercent(s.percent) }}%
-              </span>
+              <span class="skill-percent">{{ clampPercent(s.percent) }}%</span>
             </div>
 
             <div
@@ -131,26 +108,6 @@ function goTopAndPrev() {
           </li>
         </ul>
       </div>
-    </div>
-
-    <!-- NAV -->
-    <div class="nav-row">
-      <button
-        v-if="showPrev"
-        class="nav-btn"
-        type="button"
-        @click="goTopAndPrev"
-      >
-        ← Prev
-      </button>
-
-      <button
-        class="nav-btn"
-        type="button"
-        @click="goTopAndNext"
-      >
-        Next →
-      </button>
     </div>
   </section>
 </template>

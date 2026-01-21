@@ -4,20 +4,51 @@ import Compilation from './Compilation.vue'
 
 const props = defineProps({
   onPrev: { type: Function, required: true },
-  onRestart: { type: Function, required: true },
+  onContact: { type: Function, required: true },
+  onGoAbout: { type: Function, required: true }, // 👈 new
 })
+
+function scrollTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+function handlePrev() {
+  scrollTop()
+  props.onPrev()
+}
+
+function handleContact() {
+  scrollTop()
+  props.onContact()
+}
+
+function handleBackToAbout() {
+  scrollTop()
+  props.onGoAbout()
+}
 </script>
 
 <template>
-  <!-- ONE PAGE wrapper -->
   <section class="skills-page compilation-page">
-    <!-- PROJECTS -->
     <Projects />
+    <Compilation />
 
-    <!-- COMPILATION -->
-    <Compilation
-      :onPrev="props.onPrev"
-      :onRestart="props.onRestart"
-    />
+    <div class="nav-row">
+      <button class="nav-btn" type="button" @click="handlePrev">
+        ← Prev
+      </button>
+
+      <button
+        class="nav-btn nav-btn-primary"
+        type="button"
+        @click="handleContact"
+      >
+        Contact Me
+      </button>
+
+      <button class="nav-btn" type="button" @click="handleBackToAbout">
+        Back to Top ↑ 
+      </button>
+    </div>
   </section>
 </template>

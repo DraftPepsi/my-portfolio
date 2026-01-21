@@ -1,11 +1,17 @@
-// Prevent theme flash
-const savedTheme = localStorage.getItem('theme')
-if (savedTheme === 'dark') {
-  document.body.classList.add('dark')
+// main.js
+import { createApp } from "vue"
+import App from "./App.vue"
+import "./style.css"
+
+function applyTheme(theme) {
+  const isDark = theme === "dark"
+  document.documentElement.classList.toggle("dark", isDark)
+  // optional: keep only if you use this elsewhere
+  document.documentElement.setAttribute("data-theme", theme)
 }
 
-import { createApp } from 'vue'
-import App from './App.vue'
-import './style.css'
+const saved = localStorage.getItem("theme")
+const initial = saved ?? "dark"     // ✅ default to dark if nothing saved
+applyTheme(initial)
 
-createApp(App).mount('#app')
+createApp(App).mount("#app")
