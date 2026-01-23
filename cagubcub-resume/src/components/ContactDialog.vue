@@ -86,7 +86,12 @@ onBeforeUnmount(() => {
             </div>
 
             <!-- Resume -->
-            <a class="contact-btn secondary accent-orange" :href="resumeUrl" download>
+            <a
+              class="contact-btn secondary accent-orange"
+              :href="resumeUrl"
+              download="Carl_Patrick_Cagubcub_Resume.pdf"
+            >
+
               <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   fill="currentColor"
