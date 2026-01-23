@@ -4,27 +4,27 @@ const skillGroups = [
     title: 'Front-end',
     theme: 'frontend',
     skills: [
-      { name: 'Vue.JS', percent: 85 },
+      { name: 'Vue.js', percent: 90 },
+      { name: 'ReactJS', percent: 85 },
+      { name: 'CSS', percent: 85 },
       { name: 'HTML', percent: 80 },
-      { name: 'CSS', percent: 70 },
-      { name: 'ReactJS', percent: 70 },
     ],
   },
   {
     title: 'Back-end',
     theme: 'backend',
     skills: [
-      { name: 'Python', percent: 85 },
-      { name: 'SQL / PL-SQL', percent: 75 },
+      { name: 'Python', percent: 90 },
+      { name: 'SQL', percent: 80 },
       { name: 'Java', percent: 60 },
-      { name: 'C / C++', percent: 55 },
+      { name: 'C/C++', percent: 60 },
     ],
   },
   {
     title: 'Testing',
     theme: 'testing',
     skills: [
-      { name: 'Manual Testing', percent: 85 },
+      { name: 'Manual Testing', percent: 95 },
       { name: 'Selenium', percent: 85 },
       { name: 'Robot Framework', percent: 85 },
       { name: 'Ranorex', percent: 80 },
@@ -34,9 +34,10 @@ const skillGroups = [
     title: 'Tools Used',
     theme: 'tools',
     skills: [
-      { name: 'VS Code', percent: 90 },
+      { name: 'VS Code', percent: 95 },
       { name: 'Bubble.io', percent: 85 },
-      { name: 'Arduino', percent: 75 },
+      { name: 'Arduino', percent: 80 },
+      { name: 'VirtualBox', percent: 80 },
     ],
   },
   {
@@ -53,9 +54,8 @@ const skillGroups = [
     theme: 'erp',
     skills: [
       { name: 'Frappe / ERPNext', percent: 85 },
-      { name: 'VirtualBox', percent: 85 },
       { name: 'Oracle EBS', percent: 75 },
-      { name: 'Oracle APEX', percent: 70 },
+      { name: 'Oracle APEX', percent: 75 },
     ],
   },
 ]

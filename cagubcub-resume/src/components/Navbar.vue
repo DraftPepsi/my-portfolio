@@ -1,30 +1,39 @@
 <template>
   <header class="navbar">
     <div class="navbar-inner">
-      <!-- Left: placeholder name / logo -->
-      <div class="navbar-brand">
-        <span class="brand-name">Your Name.</span>
+      <!-- Left: logo + full name (clickable) -->
+      <div
+        class="navbar-brand brand-tooltip"
+        @click="goIntro"
+        role="button"
+        tabindex="0"
+      >
+        <!-- ✅ Put your PNG in /public/logo.png -->
+        <img class="brand-logo" src="/CPC.png" alt="Carl logo" />
+        <span class="brand-name">Carl Patrick Cagubcub</span>
+
+        <!-- ✅ Hover message -->
+        <span class="tooltip">Click me and I’ll say hello again!</span>
       </div>
 
       <!-- Center: links (desktop only) -->
       <nav class="navbar-links" aria-label="Primary">
         <div class="navbar-links-inner" ref="linksWrap">
-            <button
+          <button
             v-for="(item, i) in items"
             :key="item.key"
             class="nav-link"
             :class="{ active: currentPage === item.page }"
             @click="item.onClick"
             :ref="(el) => (linkRefs[i] = el)"
-            >
+          >
             {{ item.label }}
-            </button>
+          </button>
 
-            <!-- ✅ One shared underline that animates -->
-            <span class="nav-indicator" :style="indicatorStyle" />
+          <!-- ✅ One shared underline that animates -->
+          <span class="nav-indicator" :style="indicatorStyle" />
         </div>
-        </nav>
-
+      </nav>
 
       <!-- Theme switch -->
       <div class="navbar-center">
@@ -34,12 +43,14 @@
       <!-- Mobile: hamburger (rightmost) -->
       <button
         class="hamburger"
-        type="button"
-        :aria-expanded="isMenuOpen ? 'true' : 'false'"
-        aria-label="Open menu"
+        :class="{ open: isMenuOpen }"
         @click="toggleMenu"
+        aria-label="Toggle navigation menu"
+        :aria-expanded="isMenuOpen"
       >
-        <span class="hamburger-bars" :class="{ open: isMenuOpen }"></span>
+        <span></span>
+        <span></span>
+        <span></span>
       </button>
     </div>
 
@@ -64,8 +75,8 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, nextTick, onBeforeUnmount, computed } from 'vue'
-import ThemeSwitch from './ThemeSwitch.vue'
+import { ref, watch, onMounted, nextTick, onBeforeUnmount, computed } from "vue"
+import ThemeSwitch from "./ThemeSwitch.vue"
 
 const props = defineProps({
   currentPage: { type: Number, required: true },
@@ -73,6 +84,7 @@ const props = defineProps({
   onGoSkills: { type: Function, required: true },
   onGoExperience: { type: Function, required: true },
   onOpenContact: { type: Function, required: true },
+  onGoIntro: { type: Function, required: true }, // ✅ NEW
 })
 
 const isMenuOpen = ref(false)
@@ -88,11 +100,18 @@ function go(fn) {
   fn()
 }
 
+/* ✅ Brand click should go back to your intro screen.
+   Assuming "About" (page 1) is the intro/hello page in your flow. */
+function goIntro() {
+  closeMenu()
+  props.onGoIntro()
+}
+
 const items = computed(() => [
-  { key: 'about', label: 'About', page: 1, onClick: () => go(props.onGoAbout) },
-  { key: 'skills', label: 'Skills', page: 2, onClick: () => go(props.onGoSkills) },
-  { key: 'exp', label: 'Experience', page: 3, onClick: () => go(props.onGoExperience) },
-  { key: 'contact', label: 'Contact', page: -1, onClick: () => go(props.onOpenContact) },
+  { key: "about", label: "About", page: 1, onClick: () => go(props.onGoAbout) },
+  { key: "skills", label: "Skills", page: 2, onClick: () => go(props.onGoSkills) },
+  { key: "exp", label: "Experience", page: 3, onClick: () => go(props.onGoExperience) },
+  { key: "contact", label: "Contact", page: -1, onClick: () => go(props.onOpenContact) },
 ])
 
 /* ---------------- Underline indicator logic ---------------- */
@@ -112,7 +131,6 @@ const indicatorStyle = computed(() => ({
 }))
 
 function getActiveIndex() {
-  // Contact isn't a page, so no underline for it by default
   const idx = items.value.findIndex((x) => x.page === props.currentPage)
   return idx
 }
@@ -142,43 +160,36 @@ async function moveIndicator(animate = true) {
   const target = measureForIndex(idx)
   if (!target) return
 
-  // First time: just set it
   if (!animate || indicator.value.opacity === 0) {
     indicator.value = { ...target, opacity: 1 }
     return
   }
 
-  // ✅ shrink → jump → expand effect
   const currentCenter = indicator.value.left + indicator.value.width / 2
   const targetCenter = target.left + target.width / 2
 
-  // shrink to 0 at current center
   indicator.value = { left: currentCenter, width: 0, opacity: 1 }
 
-  // wait for shrink transition to be visible
   window.setTimeout(() => {
-    // jump (still 0 width) to target center
     indicator.value = { left: targetCenter, width: 0, opacity: 1 }
 
-    // next frame: expand to target size/position
     requestAnimationFrame(() => {
       indicator.value = { left: target.left, width: target.width, opacity: 1 }
     })
-  }, 140) // tweak timing if you want snappier/slower
+  }, 140)
 }
 
 function handleResize() {
-  // re-measure instantly on resize
   moveIndicator(false)
 }
 
 onMounted(async () => {
   await moveIndicator(false)
-  window.addEventListener('resize', handleResize)
+  window.addEventListener("resize", handleResize)
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', handleResize)
+  window.removeEventListener("resize", handleResize)
 })
 
 watch(
@@ -188,7 +199,6 @@ watch(
   }
 )
 
-// Close menu automatically when page changes (safe UX)
 watch(
   () => props.currentPage,
   () => closeMenu()
@@ -228,16 +238,64 @@ watch(
   position: relative;
 }
 
+/* ✅ Brand (logo + name) */
 .navbar-brand {
   display: flex;
   align-items: center;
-  min-width: 120px;
+  gap: 10px;
+  min-width: 200px;
+  cursor: pointer;
+  user-select: none;
+  position: relative; /* tooltip anchor */
 }
 
+.brand-logo {
+  height: 28px;
+  width: auto;        /* 👈 let width scale naturally */
+  max-width: 48px;    /* 👈 safety cap for wide logos */
+  object-fit: contain;
+}
+
+
 .brand-name {
-  font-size: 1.05rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 650;
   letter-spacing: 0.02em;
+  white-space: nowrap;
+  opacity: 0.95;
+}
+
+/* ✅ Tooltip */
+.brand-tooltip .tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+
+  background: var(--nav-bg);
+  color: var(--nav-text);
+  border: 1px solid var(--nav-border);
+
+  border-radius: 12px;
+  padding: 6px 10px;
+
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+/* show tooltip only on hover-capable devices */
+@media (hover: hover) {
+  .brand-tooltip:hover .tooltip {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Desktop: center the whole nav group */
@@ -253,7 +311,7 @@ watch(
   display: flex;
   gap: 1.75rem;
   align-items: center;
-  padding-bottom: 8px; /* space for underline */
+  padding-bottom: 8px;
 }
 
 .nav-link {
@@ -272,19 +330,22 @@ watch(
   position: relative;
   transition: opacity 0.25s ease;
 }
-.nav-link:hover { opacity: var(--nav-link-hover); }
-.nav-link.active { opacity: 1; }
+.nav-link:hover {
+  opacity: var(--nav-link-hover);
+}
+.nav-link.active {
+  opacity: 1;
+}
 
-/* ✅ remove old ::after underline if you had it */
 .nav-link.active::after {
   content: none;
 }
 
-/* ✅ Shared underline indicator */
+/* Shared underline indicator */
 .nav-indicator {
   position: absolute;
   left: 0;
-  bottom: 0;            /* 👈 stays INSIDE navbar */
+  bottom: 0;
   height: 2px;
   border-radius: 999px;
   background: var(--nav-active-underline);
@@ -296,53 +357,73 @@ watch(
     opacity 0.2s ease;
 }
 
-
-/* Desktop: switch is rightmost */
+/* ✅ Desktop: reserve right space so centered links don't overlap the switch */
 .navbar-center {
+  margin-left: auto;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  min-width: 160px;
 }
-
-/* Hamburger (mobile only; rightmost on mobile) */
+/* ✅ kill mobile tap highlight + default focus ring flash */
+.navbar button,
+.navbar a {
+  -webkit-tap-highlight-color: transparent;
+}
+.mobile-link:focus,
+.mobile-link:focus-visible {
+  outline: none;
+}
+/* Hamburger (mobile only) */
 .hamburger {
   display: none;
   width: 42px;
   height: 42px;
   border-radius: 12px;
+
   border: 1px solid var(--nav-border);
   background: transparent;
   color: inherit;
+
   cursor: pointer;
+
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  transition:
+    background-color var(--theme-fade) var(--theme-ease),
+    border-color var(--theme-fade) var(--theme-ease),
+    transform 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.hamburger-bars {
+.hamburger:hover {
+  background: color-mix(in srgb, var(--nav-text) 10%, transparent);
+}
+.hamburger:active {
+  transform: scale(0.98);
+}
+
+.hamburger span {
   display: block;
-  width: 18px;
-  height: 2px;
-  margin: 0 auto;
-  background: currentColor;
-  position: relative;
-  border-radius: 999px;
-  transition: transform 0.25s ease, background-color var(--theme-fade) var(--theme-ease);
-}
-.hamburger-bars::before,
-.hamburger-bars::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  width: 18px;
+  width: 20px;
   height: 2px;
   background: currentColor;
   border-radius: 999px;
-  transition: transform 0.25s ease, top 0.25s ease;
+  transition: transform 0.25s ease, opacity 0.2s ease;
 }
-.hamburger-bars::before { top: -6px; }
-.hamburger-bars::after  { top:  6px; }
 
-.hamburger-bars.open { transform: rotate(45deg); }
-.hamburger-bars.open::before { top: 0; transform: rotate(0deg); }
-.hamburger-bars.open::after { top: 0; transform: rotate(90deg); }
+.hamburger.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
 
 /* Mobile dropdown */
 .mobile-menu {
@@ -350,36 +431,58 @@ watch(
   padding: 0.35rem 1.5rem 0.9rem;
 
   display: none;
-  gap: 0.25rem;
+  gap: 0.55rem;            /* slightly more airy */
 }
 
+/* Mobile links: no container/box, right aligned, glow only */
 .mobile-link {
   width: 100%;
-  text-align: left;
+  text-align: right;       /* ✅ right aligned */
 
-  background: transparent;
-  border: 1px solid var(--nav-border);
-  color: inherit;
+  background: transparent !important; /* ✅ prevent highlight boxes */
+  border: none !important;            /* ✅ remove container border */
+  border-radius: 0 !important;
 
-  padding: 0.75rem 0.9rem;
-  border-radius: 14px;
+  padding: 0.65rem 0;      /* ✅ clean list feel */
 
   font: inherit;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.10em;
   text-transform: uppercase;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
 
+  color: inherit;
   opacity: var(--nav-link-opacity);
   cursor: pointer;
 
+  -webkit-appearance: none;
+  appearance: none;
+
   transition:
     opacity 0.2s ease,
-    background-color var(--theme-fade) var(--theme-ease),
-    border-color var(--theme-fade) var(--theme-ease);
+    text-shadow 0.25s ease;
 }
-.mobile-link:hover { opacity: var(--nav-link-hover); }
-.mobile-link.active { opacity: 1; }
 
+/* Glow on hover (no background) */
+.mobile-link:hover {
+  opacity: 1;
+  background: transparent !important;
+
+  text-shadow:
+    0 0 8px rgba(255, 255, 255, 0.35),
+    0 0 18px rgba(255, 255, 255, 0.18);
+}
+
+/* Active page: glow only (no box) */
+.mobile-link.active {
+  opacity: 1;
+  background: transparent !important;
+
+  text-shadow:
+    0 0 10px rgba(255, 255, 255, 0.45),
+    0 0 22px rgba(255, 255, 255, 0.22);
+}
+
+/* dropdown transition */
 .navdrop-enter-active,
 .navdrop-leave-active {
   transition: opacity 0.22s ease, transform 0.22s ease;
@@ -390,23 +493,50 @@ watch(
   transform: translateY(-6px);
 }
 
-/* Mobile: center the switch; hide desktop links */
+/* Mobile: hide desktop links; show hamburger; center switch */
 @media (max-width: 768px) {
-  .navbar-links { display: none; }
+  .navbar-links {
+    display: none;
+  }
+
+  /* ✅ Hide full name on mobile */
+  .brand-name {
+    display: none;
+  }
+
+  /* Optional polish */
+  .navbar-brand {
+    gap: 0;
+  }
   .hamburger {
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
   }
+
+  .navbar button,
+  .navbar a {
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
 
   .navbar-center {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
     justify-content: center;
+    min-width: auto;
+    margin-left: 0;
   }
 
-  .mobile-menu { display: grid; }
+  .mobile-menu {
+    display: grid;
+  }
+
+  /* ✅ Prevent long name from crushing mobile layout */
+  .brand-name {
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 /* Desktop: reset mobile centering */

@@ -2,53 +2,56 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const expandedIndex = ref(null)
+const internshipExpanded = ref(false)
 
 function toggle(index) {
   expandedIndex.value = expandedIndex.value === index ? null : index
 }
 
-/* Close when clicking outside */
+function toggleInternship() {
+  internshipExpanded.value = !internshipExpanded.value
+}
+
 function handleOutsideClick(event) {
   const card = event.target.closest('.project-card')
-  if (!card) expandedIndex.value = null
+  if (!card) {
+    expandedIndex.value = null
+    internshipExpanded.value = false
+  }
 }
 
 onMounted(() => document.addEventListener('click', handleOutsideClick))
 onBeforeUnmount(() => document.removeEventListener('click', handleOutsideClick))
 
-/* Height animation hooks */
 function onEnter(el) {
   el.style.height = '0px'
   el.style.opacity = '0'
   el.style.transform = 'translateY(-6px)'
-
-  // Force reflow so the browser registers height=0 before we expand
   void el.offsetHeight
-
-  const h = el.scrollHeight
-  el.style.height = `${h}px`
+  el.style.height = `${el.scrollHeight}px`
   el.style.opacity = '1'
   el.style.transform = 'translateY(0)'
 }
 
 function onAfterEnter(el) {
-  el.style.height = 'auto' // allow natural height after animation
+  el.style.height = 'auto'
 }
 
 function onLeave(el) {
-  // If it was auto, set to current px so it can animate down
   el.style.height = `${el.scrollHeight}px`
   el.style.opacity = '1'
   el.style.transform = 'translateY(0)'
-
   void el.offsetHeight
-
   el.style.height = '0px'
   el.style.opacity = '0'
   el.style.transform = 'translateY(-6px)'
 }
 
-const projects = [
+/* ============================== */
+/*   PROJECT DATA                 */
+/* ============================== */
+
+const tsukidenProjects = [
   {
     title: 'Payroll & HR Management System (HRMS)',
     client: 'Construction company · Internal enterprise system',
@@ -93,7 +96,7 @@ const projects = [
     ],
   },
   {
-    title: 'Domestic Taxi Booking System (Electronic Ticketing)',
+    title: 'Taxi Booking System (Electronic Ticketing)',
     client: 'Confidential enterprise (Japan) · B2B electronic ticketing system',
     role: 'QA Tester / Automation Engineer',
     bullets: [
@@ -137,6 +140,19 @@ const projects = [
     tech: 'React.js, Java, Spring Boot',
   },
 ]
+
+const internshipProject = {
+  title: 'Melham Construction Corporation',
+  client: 'On-site internship · Hardware & prototype projects',
+  role: 'Hardware Engineer Intern',
+  bullets: [
+    'Developed an RFID-based patient medical bracelet system integrating medical records and billing.',
+    'Assisted in hardware integration, testing, and validation of the prototype.',
+    'Worked on a cleft lip and palate voice recognition project (hardware setup + signal validation).',
+    'Supported documentation and reporting for technical handoff and research review.',
+  ],
+  tech: 'C++, Arduino',
+}
 </script>
 
 <template>
@@ -146,11 +162,15 @@ const projects = [
       These are projects I’ve worked on and am currently contributing to.
     </p>
 
+    <h3 class="company-title">Tsukiden Global Solutions Inc.</h3>
+
+    <!-- ✅ ONE grid for everything -->
     <div class="skills-grid projects-grid">
+      <!-- Tsukiden projects -->
       <div
-        v-for="(p, i) in projects"
+        v-for="(p, i) in tsukidenProjects"
         :key="p.title"
-        class="skills-card project-card"
+        class="skills-card project-card glow-card"
         :class="{ expanded: expandedIndex === i }"
         @click.stop="toggle(i)"
       >
@@ -186,6 +206,69 @@ const projects = [
           {{ expandedIndex === i ? 'Click to collapse' : 'Click me!' }}
         </div>
       </div>
+
+      <!-- ✅ Spacer + header inside grid so spacing is consistent -->
+      <div class="internship-break" aria-hidden="true"></div>
+
+      <h3 class="company-title internship-title">Internship Experience</h3>
+
+      <!-- ✅ Internship card spans FULL WIDTH (reaches end of right container) -->
+      <div
+        class="skills-card project-card glow-card internship-wide"
+        :class="{ expanded: internshipExpanded }"
+        @click.stop="toggleInternship"
+      >
+        <h3 class="skills-card-title project-title">
+          {{ internshipProject.title }}
+        </h3>
+
+        <Transition
+          name="project-accordion"
+          @enter="onEnter"
+          @after-enter="onAfterEnter"
+          @leave="onLeave"
+        >
+          <div v-if="internshipExpanded" class="project-panel">
+            <div class="project-content">
+              <p class="project-client">{{ internshipProject.client }}</p>
+              <p class="project-role">{{ internshipProject.role }}</p>
+
+              <ul class="project-bullets">
+                <li v-for="(b, i) in internshipProject.bullets" :key="i">
+                  {{ b }}
+                </li>
+              </ul>
+
+              <p v-if="internshipProject.tech" class="project-tech">
+                <strong>Tech:</strong> {{ internshipProject.tech }}
+              </p>
+            </div>
+          </div>
+        </Transition>
+
+        <div class="project-hint">
+          {{ internshipExpanded ? 'Click to collapse' : 'Click me!' }}
+        </div>
+      </div>
     </div>
   </section>
 </template>
+
+<style scoped>
+/* ✅ Gap between Supply Chain row and Internship section */
+.internship-break {
+  grid-column: 1 / -1;
+  height: 14px; /* adjust if you want more/less space */
+}
+
+/* ✅ Internship header sits on its own row */
+.internship-title {
+  grid-column: 1 / -1;
+  margin: 0; /* grid spacing is handled by break + grid gap */
+}
+
+/* ✅ Internship accordion spans full width */
+.internship-wide {
+  grid-column: 1 / -1;
+}
+</style>

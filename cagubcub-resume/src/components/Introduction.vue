@@ -1,167 +1,136 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from "vue"
 
-/*   EMITS + PROPS                */
-const emit = defineEmits(['next'])
+/* EMITS */
+const emit = defineEmits(["next"])
 
-const props = defineProps({
-  skipTyping: { type: Boolean, default: false },
-})
-
-/*   TYPING INTRO                 */
-const fullText = 'Software Engineer'
-const typedText = ref('')
-const showCursor = ref(true)
+/* Show states (keep transitions the same) */
 const showCard = ref(false)
 
-/*   PROJECTS (RIGHT SIDE)        */
-const showProjects = ref(false)
-
-const projects = [
-  { title: 'Payroll and HR Management System Website', role: 'Software Developer - Current' },
-  { title: 'Software Management System for Windows', role: 'Software Developer and QA Tester' },
-  { title: 'Domestic Hotel and Flights Website', role: 'Back-end Developer and QA Tester' },
-  { title: 'Domestic Car Rental Service Website', role: 'Back-end Developer and QA Tester' },
-  { title: 'Digital Taxi Booking System used for Company Services', role: 'QA Tester and Automation Developer' },
-  { title: 'Conference Room Reservation System', role: 'Software Developer' },
-  { title: 'Supply Chain and Financial Management System', role: 'Software Developer and Researcher' },
-  { title: 'Learning Management System for New Recruits', role: 'Software Developer and Analyst, Team Leader' },
-  { title: 'Cleft lip and Palate Voice Recognition ', role: 'Hardware Developer - Internship' },
-  { title: 'RFID Patient Medical Bracelet - Medical Records and Billing', role: 'Hardware Developer - Internship' },
-]
-
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
-
-function randomDelay(char) {
-  let delay = 35 + Math.random() * 85
-  if (char === ',' || char === '.' || char === '&') delay += 90 + Math.random() * 120
-  if (char === ' ') delay *= 0.6
-  return delay
-}
-
-/*   INTRO SEQUENCE               */
-async function runIntro() {
-  // ✅ RETURN VISIT: skip typing entirely
-  if (props.skipTyping) {
-    typedText.value = fullText
-    showCursor.value = false
-    showCard.value = true
-    showProjects.value = true
-    return
-  }
-
-  // 🧠 FIRST VISIT: typing animation
-  await sleep(500)
-
-  for (let i = 0; i < fullText.length; i++) {
-    const ch = fullText[i]
-    typedText.value += ch
-    await sleep(randomDelay(ch))
-  }
-
-  await sleep(450)
-  showCursor.value = false
-
-  showCard.value = true
-  showProjects.value = true
-}
-
-/* ✅ Scroll to top + go next */
+/* Scroll to top + go next */
 function goTopAndNext() {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-  emit('next')
+  window.scrollTo({ top: 0, behavior: "smooth" })
+  emit("next")
 }
 
 onMounted(() => {
-  // reset state to avoid stale values
-  typedText.value = ''
-  showCursor.value = true
   showCard.value = false
-  showProjects.value = false
-
-  runIntro()
+  showCard.value = true
 })
 </script>
 
 <template>
   <section class="intro-layout">
     <!-- HEADER -->
-    <h2 class="intro-role">
-      <span class="typing-text">
-        {{ typedText }}
-        <span v-if="showCursor" class="caret">|</span>
-      </span>
-    </h2>
+    <header class="intro-header">
+      <h1 class="intro-name">Carl Patrick Cagubcub</h1>
+      <p class="intro-role">Software Engineer</p>
+    </header>
 
-    <!-- LEFT SIDE -->
+    <!-- LEFT COLUMN (2 CARDS) -->
     <div class="intro-left">
+      <!-- Introduction -->
       <Transition name="cardfade">
         <div v-if="showCard" class="intro-card">
           <h3 class="intro-title">Introduction</h3>
 
           <p>
-            Hi, I’m Carl. I’m a Quality Assurance Tester who enjoys making sure
-            things work the way they should — and improving them when they don’t.
-            I have experience with both manual and automated testing.
+            Hi, I’m Carl — a Software Engineer with a strong background in Quality
+            Assurance. I enjoy building reliable systems and making sure software
+            works the way it should.
           </p>
 
           <p>
-            I am also a Software Developer and enjoy developing web applications.
-            I like working closely with teams, learning new tools, and building
-            reliable, user-friendly software that people can trust.
+            I have experience in both manual and automated testing, as well as
+            developing web applications. I like collaborating with teams, learning
+            new tools, and delivering user-friendly software people can trust.
           </p>
         </div>
       </Transition>
 
+      <!-- Education -->
+      <Transition name="cardfade">
+        <div v-if="showCard" class="intro-card">
+          <h3 class="intro-title">Education</h3>
+
+          <p class="edu-degree">
+            Bachelor of Science in Electronics and Communications Engineering
+          </p>
+          <p class="edu-meta">
+            University of Perpetual Help System DALTA – Las Piñas • October 2023
+          </p>
+        </div>
+      </Transition>
+    </div>
+
+    <!-- RIGHT COLUMN (2 CARDS) -->
+    <div class="intro-right">
+      <!-- Work Experience -->
       <Transition name="cardfade">
         <div v-if="showCard" class="work-card">
           <h3 class="work-title">Work Experience</h3>
+
           <div class="work-item">
             <p class="work-company">Tsukiden Global Solutions Inc.</p>
 
             <div class="work-header">
               <span class="work-role">Software Engineer</span>
-              <span class="work-date">October 2023 – Present</span>
-            </div>
-            <p class="work-desc">
-              Responsible for manual and automated testing, writing test cases,
-              identifying defects, and collaborating with developers to ensure
-              software quality.
-            </p>
-          </div>
-<br>
-          <div class="work-item">
-            <p class="work-company">Melham Construction Corporation</p>
-            <div class="work-header">
-              <span class="work-role">Hardware Engineer Intern</span>
-              <span class="work-date">July 2022 – September 2022</span>
+              <span class="work-date">Oct 2023 – Present</span>
             </div>
 
             <p class="work-desc">
               Responsible for manual and automated testing, writing test cases,
               identifying defects, and collaborating with developers to ensure
               software quality.
+            </p>
+          </div>
+
+          <br />
+
+          <div class="work-item">
+            <p class="work-company">Melham Construction Corporation</p>
+
+            <div class="work-header">
+              <span class="work-role">Hardware Engineer Intern</span>
+              <span class="work-date">Jul 2022 – Sep 2022</span>
+            </div>
+
+            <p class="work-desc">
+              Assisted in testing and documentation, supporting validation tasks
+              and project deliverables.
             </p>
           </div>
         </div>
       </Transition>
-    </div>
 
-    <!-- RIGHT SIDE -->
-    <div class="intro-right">
+      <!-- Languages -->
       <Transition name="cardfade">
-        <div v-if="showCard && showProjects" class="projects-card">
-          <h3 class="projects-title">Projects Handled</h3>
+        <div v-if="showCard" class="intro-card">
+          <h3 class="intro-title">Languages</h3>
 
-          <ul class="projects-list">
-            <li v-for="p in projects" :key="p.title" class="project-item">
-              <p class="project-name">{{ p.title }}</p>
-              <p class="project-role">{{ p.role }}</p>
-            </li>
-          </ul>
+          <div class="lang-stack">
+            <div class="lang-row" style="--lvl: 95%">
+              <div class="lang-top">
+                <span class="lang-name">English</span>
+                <span class="lang-pct">95%</span>
+              </div>
+
+              <div class="lang-bar">
+                <span class="lang-fill"></span>
+              </div>
+            </div>
+
+            <div class="lang-row" style="--lvl: 95%">
+              <div class="lang-top">
+                <span class="lang-name">Filipino (Tagalog)</span>
+                <span class="lang-pct">95%</span>
+              </div>
+
+              <div class="lang-bar">
+                <span class="lang-fill"></span>
+              </div>
+            </div>
+          </div>
         </div>
       </Transition>
     </div>
@@ -179,13 +148,148 @@ onMounted(() => {
         ← Previous
       </button>
 
-      <button
-        class="nav-btn"
-        type="button"
-        @click="goTopAndNext"
-      >
+      <button class="nav-btn" type="button" @click="goTopAndNext">
         Next →
       </button>
     </div>
   </Transition>
 </template>
+
+<style scoped>
+/* HEADER */
+.intro-header {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.intro-name {
+  font-size: clamp(2.2rem, 4.5vw, 3rem);
+  font-weight: 700;
+  line-height: 1.08;
+  margin: 0;
+  letter-spacing: -0.02em;
+  color: var(--text-color);
+}
+
+.intro-role {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 500;
+  opacity: 0.7;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+
+/* ✅ MAKE THESE TITLES MATCH "Work Experience" */
+.intro-title {
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+  font-size: 1.25em;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-align: left;
+}
+
+.work-title {
+  text-align: left;
+}
+
+/* ✅ BOTTOM CARDS SMALLER BUT STILL BOTTOM-ALIGNED (DESKTOP) */
+@media (min-width: 769px) {
+  .intro-left,
+  .intro-right {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 1.5rem;
+    height: 100%;
+    min-height: 0;
+  }
+
+  .intro-left :deep(.intro-card):nth-of-type(2),
+  .intro-right :deep(.intro-card):nth-of-type(2) {
+    min-height: 240px;
+  }
+}
+
+/* Education */
+.edu-degree {
+  font-weight: 650;
+  margin: 0 0 0.35rem 0;
+}
+
+.edu-meta {
+  margin: 0;
+  opacity: 0.85;
+}
+
+/* ✅ Languages: % at far right, bar below */
+.lang-stack {
+  display: grid;
+  gap: 1.4rem;   /* ⬅️ more space between languages */
+  margin-top: 0.5rem;
+}
+
+/* ⛔ override old grid rules */
+.lang-row {
+  display: block !important;   /* ← this breaks the old 3-column layout */
+}
+
+/* Name + % on ONE line */
+.lang-top {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  margin-bottom: 0.55rem;  /* ⬅️ more space before bar */
+}
+
+.lang-name {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lang-pct {
+  justify-self: end;
+  opacity: 0.85;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Bar is ALWAYS below */
+.lang-bar {
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+
+  background: rgba(var(--card-rgb), 0.12);
+  border: 1px solid rgba(var(--card-rgb), 0.18);
+}
+
+.lang-fill {
+  display: block;
+  height: 100%;
+  width: var(--lvl, 0%);
+  border-radius: 999px;
+  background: rgba(var(--card-rgb), 0.85);
+}
+/* ✅ MOBILE: add equal spacing between stacked cards (no grid, no stretching) */
+@media (max-width: 768px) {
+  /* space between the two left cards */
+  .intro-left > .intro-card + .intro-card {
+    margin-top: 1.25rem;
+  }
+
+  /* space between Work Experience card and Languages card */
+  .intro-right > .work-card + .intro-card {
+    margin-top: 1.25rem;
+  }
+
+  /* optional: if left column stacks above right column, add spacing between columns */
+}
+
+</style>

@@ -47,7 +47,7 @@ function handleBackToAbout() {
       </button>
 
       <button class="nav-btn" type="button" @click="handleBackToAbout">
-        Back to Top ↑ 
+        Back to Top↑ 
       </button>
     </div>
   </section>

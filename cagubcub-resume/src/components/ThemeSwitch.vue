@@ -7,7 +7,7 @@
         type="checkbox"
         v-model="isDark"
         @change="applyTheme"
-        aria-label="Toggle dark mode"
+        aria-label="Toggle theme"
       />
       <span class="slider"></span>
     </label>
@@ -17,18 +17,23 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-const isDark = ref(false)
+/*
+  Dark is DEFAULT now.
+  Checkbox ON = dark
+  Checkbox OFF = light
+*/
+const isDark = ref(true)
 
 function setTheme(dark) {
-  // ✅ Make BOTH respond (matches your CSS selectors)
-  document.documentElement.classList.toggle('dark', dark)
-  document.body.classList.toggle('dark', dark)
+  // ✅ toggle LIGHT class (dark is default)
+  document.documentElement.classList.toggle('light', !dark)
+  document.body.classList.toggle('light', !dark)
 
   localStorage.setItem('theme', dark ? 'dark' : 'light')
 }
 
 onMounted(() => {
-  const saved = localStorage.getItem('theme')
+  const saved = localStorage.getItem('theme') ?? 'dark'
   isDark.value = saved === 'dark'
   setTheme(isDark.value)
 })

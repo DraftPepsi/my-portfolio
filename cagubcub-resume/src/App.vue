@@ -7,6 +7,7 @@
     :onGoSkills="() => goToPage(2)"
     :onGoExperience="() => goToPage(3)"
     :onOpenContact="openContactDialog"
+    :onGoIntro="goToIntro"
   />
 
   <!-- ⬇️ Page content (transitions happen here) -->
@@ -50,20 +51,20 @@
     :open="isContactOpen"
     emailTo="pcagubcub@gmail.com"
     linkedinUrl="https://www.linkedin.com/in/ccagubcub/"
-    resumeUrl="/resume/Carl_Resume.pdf"
+    resumeUrl="/public/Cagubcub_Resume.pdf"
     @close="isContactOpen = false"
   />
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue"
 
-import Navbar from './components/Navbar.vue'
-import IntroScreen from './components/IntroScreen.vue'
-import Introduction from './components/Introduction.vue'
-import SkillsPage from './components/SkillsPage.vue'
-import CompilationPage from './components/CompilationPage.vue'
-import ContactDialog from './components/ContactDialog.vue'
+import Navbar from "./components/Navbar.vue"
+import IntroScreen from "./components/IntroScreen.vue"
+import Introduction from "./components/Introduction.vue"
+import SkillsPage from "./components/SkillsPage.vue"
+import CompilationPage from "./components/CompilationPage.vue"
+import ContactDialog from "./components/ContactDialog.vue"
 
 const showIntro = ref(true)
 const currentPage = ref(1)
@@ -86,7 +87,7 @@ function prevPage() {
     if (next === 1) hasVisitedIntro.value = true
 
     currentPage.value = next
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 }
 
@@ -102,12 +103,26 @@ function goToPage(page) {
     hasVisitedIntro.value = true
   }
 
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  window.scrollTo({ top: 0, behavior: "smooth" })
   currentPage.value = page
 }
 
+/* ✅ NEW: return to IntroScreen when clicking your brand/logo */
+function goToIntro() {
+  window.scrollTo({ top: 0, behavior: "smooth" })
+
+  // Optional: close contact modal if open
+  isContactOpen.value = false
+
+  // Optional: reset to About so after intro you land cleanly
+  currentPage.value = 1
+
+  // Show IntroScreen again
+  showIntro.value = true
+}
+
 function openContactDialog() {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  window.scrollTo({ top: 0, behavior: "smooth" })
   isContactOpen.value = true
 }
 </script>
