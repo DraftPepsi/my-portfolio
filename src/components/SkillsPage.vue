@@ -1,6 +1,6 @@
 <script setup>
 import TechSkills from './TechSkills.vue'
-import OtherSkills from './OtherSkills.vue'
+import OtherSkills from './Otherskills.vue'
 
 const props = defineProps({
   onPrev: { type: Function, required: true },
