@@ -51,7 +51,7 @@
     :open="isContactOpen"
     emailTo="pcagubcub@gmail.com"
     linkedinUrl="https://www.linkedin.com/in/ccagubcub/"
-    resumeUrl="/Cagubcub_Resume.pdf"
+    resumeUrl="/cagubcub-resume.pdf"
     @close="isContactOpen = false"
   />
 </template>

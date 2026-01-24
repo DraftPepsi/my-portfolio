@@ -5,7 +5,7 @@ const props = defineProps({
   open: { type: Boolean, default: false },
   emailTo: { type: String, required: true },
   linkedinUrl: { type: String, required: true },
-  resumeUrl: { type: String, required: true },
+  resumeUrl: { type: String, required: true }, // ✅ pass "/Cagubcub_Resume.pdf" from App.vue
 })
 
 const emit = defineEmits(["close"])
@@ -89,9 +89,8 @@ onBeforeUnmount(() => {
             <a
               class="contact-btn secondary accent-orange"
               :href="resumeUrl"
-              download="Carl_Patrick_Cagubcub_Resume.pdf"
+              download="Cagubcub_Resume.pdf"
             >
-
               <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path
                   fill="currentColor"
@@ -108,7 +107,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-/* Overlay: just dim the page a bit */
+/* Overlay */
 .contact-overlay {
   position: fixed;
   inset: 0;
@@ -122,31 +121,24 @@ onBeforeUnmount(() => {
   background: rgba(0, 0, 0, 0.35);
 }
 
-/* Modal: same as theme background, solid */
+/* Modal */
 .contact-modal {
   width: min(520px, 92vw);
   border-radius: 18px;
   padding: 1.75rem;
 
+  /* ✅ uses your theme token */
   background: var(--bg-color);
 
-  /* use "opposite" text color token */
-  color: var(--modal-ink);
+  /* ✅ THIS fixes your “white text in light mode” bug */
+  color: var(--text-color);
 
-  border: 1px solid var(--modal-border);
+  /* ✅ border derived from current text color */
+  border: 1px solid color-mix(in srgb, var(--text-color) 18%, transparent 82%);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
 }
 
-/* Dark mode: creamy white text */
-:global(html.dark) .contact-modal {
-  --modal-ink: rgba(255, 250, 242, 0.92);
-  --modal-border: rgba(255, 255, 255, 0.10);
-}
-
-/* Light mode: dark text */
 :global(html:not(.dark)) .contact-modal {
-  --modal-ink: rgba(20, 28, 40, 0.92);
-  --modal-border: rgba(0, 0, 0, 0.12);
   box-shadow: 0 18px 55px rgba(0, 0, 0, 0.18);
 }
 
@@ -166,12 +158,14 @@ onBeforeUnmount(() => {
 .close-btn {
   background: none;
   border: none;
-  color: inherit;
+  color: var(--text-color); /* ✅ explicit */
   font-size: 1.35rem;
   cursor: pointer;
   opacity: 0.7;
 }
-.close-btn:hover { opacity: 1; }
+.close-btn:hover {
+  opacity: 1;
+}
 
 .contact-text {
   margin: 0.75rem 0 1.25rem;
@@ -198,8 +192,11 @@ onBeforeUnmount(() => {
   padding: 0.75rem 1.1rem;
   font-weight: 800;
 
-  border: 1px solid color-mix(in srgb, var(--modal-ink) 25%, transparent 75%);
+  /* ✅ outline matches current theme (no “dark-mode outline” in light mode) */
+  border: 1px solid color-mix(in srgb, var(--text-color) 22%, transparent 78%);
   background: transparent;
+
+  /* text stays readable; accent classes tint it */
   color: inherit;
 
   transition: transform 0.2s ease, box-shadow 0.25s ease, opacity 0.2s ease;
@@ -212,12 +209,12 @@ onBeforeUnmount(() => {
   color: currentColor;
 }
 
-/* Resume button spans full width */
+/* Resume spans full width */
 .contact-btn.secondary {
   width: 100%;
 }
 
-/* Accent color just tints the text/icon (keeps your palette) */
+/* Accent color just tints text/icon */
 .accent-blue   { color: rgb(var(--logo-indigo)); }
 .accent-pink   { color: rgb(var(--logo-pink)); }
 .accent-orange { color: rgb(var(--logo-orange)); }
@@ -225,7 +222,7 @@ onBeforeUnmount(() => {
 .contact-btn:hover {
   transform: translateY(-2px);
   opacity: 0.96;
-  box-shadow: 0 16px 34px rgba(0,0,0,0.22);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
 }
 
 /* Transitions */
