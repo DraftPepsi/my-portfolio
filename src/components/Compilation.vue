@@ -4,7 +4,7 @@
 
 <template>
   <section class="compilation-section">
-    <h2 class="skills-title">Compilation</h2>
+    <h2 class="skills-title">My Summary</h2>
     <p class="skills-subtitle">
       A combined summary of my experience, skills, and strengths.
     </p>
@@ -22,9 +22,10 @@
       <div class="skills-card">
         <h3 class="skills-card-title">Core Strengths</h3>
         <ul class="bullet-list">
+          <li>Uses structured QA methods with manual and automated testing to ensure quality results.</li>
           <li>Builds and maintains user-friendly web interfaces with a focus on clarity and usability.</li>
           <li>Works with back-end logic, databases, and system processes to support stable applications.</li>
-          <li>Uses modern tools and version control practices to collaborate effectively with teams.</li>
+
         </ul>
       </div>
 
