@@ -15,26 +15,19 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from "vue"
 
-/*
-  Dark is DEFAULT now.
-  Checkbox ON = dark
-  Checkbox OFF = light
-*/
-const isDark = ref(true)
+const isDark = ref(true) // dark default
 
 function setTheme(dark) {
-  // ✅ toggle LIGHT class (dark is default)
-  document.documentElement.classList.toggle('light', !dark)
-  document.body.classList.toggle('light', !dark)
-
-  localStorage.setItem('theme', dark ? 'dark' : 'light')
+  // Dark is default; Light adds class
+  document.documentElement.classList.toggle("light", !dark)
+  localStorage.setItem("theme", dark ? "dark" : "light")
 }
 
 onMounted(() => {
-  const saved = localStorage.getItem('theme') ?? 'dark'
-  isDark.value = saved === 'dark'
+  const saved = localStorage.getItem("theme") ?? "dark"
+  isDark.value = saved === "dark"
   setTheme(isDark.value)
 })
 
