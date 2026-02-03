@@ -141,13 +141,17 @@ body::before {
   pointer-events: none;
   z-index: 0;
 
-  background:
+  /* IMPORTANT: make the base a real color so it can transition */
+  background-color: var(--bg-color);
+
+  /* Keep aurora as images on top */
+  background-image:
     radial-gradient(900px 650px at 15% 20%, rgba(var(--logo-pink), 0.18), transparent 60%),
     radial-gradient(900px 650px at 85% 25%, rgba(var(--logo-indigo), 0.18), transparent 62%),
-    radial-gradient(950px 700px at 50% 90%, rgba(var(--logo-orange), 0.14), transparent 65%),
-    linear-gradient(0deg, var(--bg-color), var(--bg-color));
+    radial-gradient(950px 700px at 50% 90%, rgba(var(--logo-orange), 0.14), transparent 65%);
 
-  /* 🚫 no transform, no animation */
+  /* Bring back theme fade on the overlay base */
+  transition: background-color var(--theme-fade) var(--theme-ease);
 }
 
 
