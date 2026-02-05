@@ -109,26 +109,20 @@ onMounted(() => {
           <h3 class="intro-title">Languages</h3>
 
           <div class="lang-stack">
-            <div class="lang-row" style="--lvl: 95%">
+            <div class="lang-row">
               <div class="lang-top">
                 <span class="lang-name">English</span>
-                <span class="lang-pct">95%</span>
+                <span class="lang-level">Fluent</span>
               </div>
-
-              <div class="lang-bar">
-                <span class="lang-fill"></span>
-              </div>
+              <div class="lang-line" aria-hidden="true"></div>
             </div>
 
-            <div class="lang-row" style="--lvl: 95%">
+            <div class="lang-row">
               <div class="lang-top">
                 <span class="lang-name">Filipino (Tagalog)</span>
-                <span class="lang-pct">95%</span>
+                <span class="lang-level">Native</span>
               </div>
-
-              <div class="lang-bar">
-                <span class="lang-fill"></span>
-              </div>
+              <div class="lang-line" aria-hidden="true"></div>
             </div>
           </div>
         </div>
@@ -226,24 +220,22 @@ onMounted(() => {
   opacity: 0.85;
 }
 
-/* ✅ Languages: % at far right, bar below */
+/* ✅ Languages (now labels + line, no % bar) */
 .lang-stack {
   display: grid;
-  gap: 1.4rem;   /* ⬅️ more space between languages */
+  gap: 1.4rem;
   margin-top: 0.5rem;
 }
 
-/* ⛔ override old grid rules */
 .lang-row {
-  display: block !important;   /* ← this breaks the old 3-column layout */
+  display: block !important;
 }
 
-/* Name + % on ONE line */
 .lang-top {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: baseline;
-  margin-bottom: 0.55rem;  /* ⬅️ more space before bar */
+  margin-bottom: 0.55rem;
 }
 
 .lang-name {
@@ -251,45 +243,30 @@ onMounted(() => {
   white-space: nowrap;
 }
 
-.lang-pct {
+.lang-level {
   justify-self: end;
-  opacity: 0.85;
+  opacity: 0.9;
   font-weight: 600;
-  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
-/* Bar is ALWAYS below */
-.lang-bar {
+/* Divider line (replaces progress bar) */
+.lang-line {
+  height: 2px;
   width: 100%;
-  height: 12px;
-  border-radius: 999px;
-  overflow: hidden;
-
-  background: rgba(var(--card-rgb), 0.12);
-  border: 1px solid rgba(var(--card-rgb), 0.18);
+  border-radius: 2px;
+  background: linear-gradient(to right, rgba(var(--card-rgb), 0.85), transparent);
+  opacity: 0.55;
 }
 
-.lang-fill {
-  display: block;
-  height: 100%;
-  width: var(--lvl, 0%);
-  border-radius: 999px;
-  background: rgba(var(--card-rgb), 0.85);
-}
 /* ✅ MOBILE: add equal spacing between stacked cards (no grid, no stretching) */
 @media (max-width: 768px) {
-  /* space between the two left cards */
   .intro-left > .intro-card + .intro-card {
     margin-top: 1.25rem;
   }
 
-  /* space between Work Experience card and Languages card */
   .intro-right > .work-card + .intro-card {
     margin-top: 1.25rem;
   }
-
-  /* optional: if left column stacks above right column, add spacing between columns */
 }
-
 </style>
