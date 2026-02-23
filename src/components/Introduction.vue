@@ -75,7 +75,7 @@ onMounted(() => {
 
             <div class="work-header">
               <span class="work-role">Software Engineer</span>
-              <span class="work-date">Oct 2023 – Present</span>
+              <span class="work-date">October 2023 – March 2026</span>
             </div>
 
             <p class="work-desc">
@@ -92,7 +92,7 @@ onMounted(() => {
 
             <div class="work-header">
               <span class="work-role">Hardware Engineer Intern</span>
-              <span class="work-date">Jul 2022 – Sep 2022</span>
+              <span class="work-date">July 2022 – September 2022</span>
             </div>
 
             <p class="work-desc">
